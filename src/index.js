@@ -224,7 +224,12 @@ export const RenderStr2HTML = (str) => {
         .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
 };
 
-export const getSHA1 = async (str) => {
+/**
+ * SHA1 hash function
+ * @param {string} str - Input string to hash
+ * @returns {Promise<string>} - SHA1 hash as a hex string
+ */
+export const SHA1 = async (str) => {
     // http do not support crypto
     if (!crypto || !crypto.subtle) { // http do not support crypto
         return window.sha1(str);
@@ -238,6 +243,11 @@ export const getSHA1 = async (str) => {
         .join('');
 };
 
+/**
+ * SHA256 hash function
+ * @param {string} str - Input string to hash
+ * @returns {Promise<string>} - SHA256 hash as a hex string
+ */
 export const SHA256 = async (str) => {
     // http do not support crypto
     if (!crypto || !crypto.subtle) { // http do not support crypto
@@ -674,7 +684,7 @@ const allUtils = {
     ScrollDown,
     TrimSpace,
     RenderStr2HTML,
-    getSHA1,
+    SHA1,
     SHA256,
     ready,
     escapeHtml,
