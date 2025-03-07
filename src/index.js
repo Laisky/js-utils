@@ -7,47 +7,6 @@ import * as bootstrap from 'bootstrap';
 import * as base from './base';
 import * as kvUtils from './kv';
 
-export {
-    kvUtils
-};
-export default {
-    ...base,
-    ...kvUtils,
-
-    // Individual exported functions
-    LoadJsModules,
-    Compatible,
-    Sleep,
-    ActiveElementsByID,
-    ActiveElementsByData,
-    DateStr,
-    Markdown2HTML,
-    ScrollDown,
-    TrimSpace,
-    RenderStr2HTML,
-    getSHA1,
-    SHA256,
-    ready,
-    escapeHtml,
-    escapeHtmlAttribute,
-    EnableTooltipsEverywhere,
-    DisableTooltipsEverywhere,
-    blob2Hex,
-    hex2Bytes,
-    hex2Blob,
-    gzip,
-    ungzip,
-    sanitizeHTML,
-    evtTarget,
-    waitElementReady,
-    RandomString,
-    Copy2Clipboard,
-    DownloadImage,
-    IsTouchDevice,
-    SetCache,
-    GetCache,
-    formatRelativeTime
-}
 
 /**
  * load js modules by urls
@@ -697,4 +656,50 @@ export const formatRelativeTime = (timestamp) => {
 
     const diffYears = Math.floor(diffMonths / 12);
     return `${diffYears} year${diffYears !== 1 ? 's' : ''} ago`;
+};
+
+
+const allUtils = {
+    ...base,
+    ...kvUtils,
+
+    // Individual exported functions
+    LoadJsModules,
+    Compatible,
+    Sleep,
+    ActiveElementsByID,
+    ActiveElementsByData,
+    DateStr,
+    Markdown2HTML,
+    ScrollDown,
+    TrimSpace,
+    RenderStr2HTML,
+    getSHA1,
+    SHA256,
+    ready,
+    escapeHtml,
+    escapeHtmlAttribute,
+    EnableTooltipsEverywhere,
+    DisableTooltipsEverywhere,
+    blob2Hex,
+    hex2Bytes,
+    hex2Blob,
+    gzip,
+    ungzip,
+    sanitizeHTML,
+    evtTarget,
+    waitElementReady,
+    RandomString,
+    Copy2Clipboard,
+    DownloadImage,
+    IsTouchDevice,
+    SetCache,
+    GetCache,
+    formatRelativeTime
+};
+
+export default allUtils;
+
+export {
+    kvUtils
 };

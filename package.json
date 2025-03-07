@@ -44,7 +44,8 @@
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
         "rollup": "^4.34.9",
-        "rollup-plugin-dts": "^6.1.1"
+        "rollup-plugin-dts": "^6.1.1",
+        "typescript": "^5.8.2"
     },
     "browserslist": [
         ">0.2%",
