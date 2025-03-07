@@ -1,6 +1,18 @@
 'use strict';
 
+import * as base from './base.js';
+
 import PouchDB from 'pouchdb';
+
+/**
+ * async wait for milliseconds
+ *
+ * @param {*} milliseconds
+ * @returns
+ */
+export const Sleep = async (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 // {key: [callback1, callback2, {name, callback}]}
 const kvListeners = {};
@@ -371,5 +383,57 @@ export const GetLocalStorage = (key) => {
         return JSON.parse(v);
     } else {
         return v;
+    }
+};
+
+/**
+ * Get current username
+ *
+ * @param {string} key
+ * @param {string} val
+ * @param {number} ttlSeconds - time to live in seconds, default is 1 day
+ */
+export const SetCache = async (key, val, ttlSeconds = base.DurationDay) => {
+    const cache = {
+        val,
+        expireAt: Date.now() + ttlSeconds * 1000
+    };
+
+    try {
+        await KvSet(key, cache);
+        console.debug(`cache set: ${key}`);
+    } catch (error) {
+        console.error(`SetCache failed: ${error}`);
+    }
+};
+
+/**
+ * Get cache
+ *
+ * @param {string} key
+ * @returns null if not found or expired
+ */
+export const GetCache = async (key) => {
+    // Check if 'force' exists in the URL query parameters, ignore cache if true
+    if (typeof window !== 'undefined' && window.location) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('force')) {
+            return null;
+        }
+    }
+
+    try {
+        const cache = await KvGet(key);
+        if (!cache || cache.expireAt < Date.now()) {
+            console.debug(`cache miss: ${key}`);
+            await KvDel(key);
+            return null;
+        }
+
+        console.debug(`cache hit: ${key}`);
+        return cache.val;
+    } catch (error) {
+        console.error(`GetCache failed: ${error}`);
+        return null;
     }
 };
