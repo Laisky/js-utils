@@ -1,19 +1,52 @@
 'use strict';
 
-
 import { marked } from 'marked';
 import { sha256 } from 'js-sha256';
 import * as bootstrap from 'bootstrap';
-import { DurationDay } from './base';
 
+import * as base from './base';
 import * as kvUtils from './kv';
 
 export {
     kvUtils
 };
-
 export default {
-    ...kvUtils
+    ...base,
+    ...kvUtils,
+
+    // Individual exported functions
+    LoadJsModules,
+    Compatible,
+    Sleep,
+    ActiveElementsByID,
+    ActiveElementsByData,
+    DateStr,
+    Markdown2HTML,
+    ScrollDown,
+    TrimSpace,
+    RenderStr2HTML,
+    getSHA1,
+    SHA256,
+    ready,
+    escapeHtml,
+    escapeHtmlAttribute,
+    EnableTooltipsEverywhere,
+    DisableTooltipsEverywhere,
+    blob2Hex,
+    hex2Bytes,
+    hex2Blob,
+    gzip,
+    ungzip,
+    sanitizeHTML,
+    evtTarget,
+    waitElementReady,
+    RandomString,
+    Copy2Clipboard,
+    DownloadImage,
+    IsTouchDevice,
+    SetCache,
+    GetCache,
+    formatRelativeTime
 }
 
 /**
