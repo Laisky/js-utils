@@ -1,0 +1,47 @@
+name: Test and build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: js-utils-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-build:
+    name: Node ${{ matrix.node }} tests and bundles
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24']
+    env:
+      COREPACK_ENABLE_AUTO_PIN: '0'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Activate pinned Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@1.22.22 --activate
+          test "$(yarn --version)" = '1.22.22'
+      - name: Install frozen dependencies
+        run: yarn install --frozen-lockfile --non-interactive
+      - name: Run all tests, including abort regressions
+        run: yarn test --runInBand
+      - name: Build ESM, CommonJS and UMD bundles
+        run: yarn build
+      - name: Verify tracked inputs remain unchanged
+        run: git diff --exit-code -- package.json yarn.lock src tests
