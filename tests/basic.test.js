@@ -1,5 +1,8 @@
 import { jest } from '@jest/globals';
-import { Compatible, Sleep, TrimSpace, formatRelativeTime } from '../src/index.js';
+import { Compatible, kvUtils, TrimSpace, formatRelativeTime } from '../src/index.js';
+
+// Sleep is exposed by the public KV namespace, not as a top-level named export.
+const { Sleep } = kvUtils;
 
 describe('Basic utilities', () => {
     describe('Compatible', () => {
