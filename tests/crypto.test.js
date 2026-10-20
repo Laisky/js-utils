@@ -6,36 +6,33 @@ import { sha256 } from './__mocks__/js-sha256.js';
 
 describe('Crypto utilities', () => {
     describe('SHA256', () => {
-        let originalCrypto;
+        let originalCryptoDescriptor;
 
         beforeEach(() => {
             // Store original crypto
-            originalCrypto = global.crypto;
+            originalCryptoDescriptor = Object.getOwnPropertyDescriptor(global, 'crypto');
             // Reset mock counts
             sha256.mockClear();
         });
 
         afterEach(() => {
             // Restore original crypto
-            global.crypto = originalCrypto;
+            Object.defineProperty(global, 'crypto', originalCryptoDescriptor);
         });
 
         test('should use Web Crypto API when available', async () => {
-            if (!crypto.subtle || !crypto.subtle.digest) {
-                // If Web Crypto is not available, skip this test
-                console.log('Web Crypto API not available. Skipping test.');
-                return;
-            }
-
             // Create a buffer with predictable bytes
             const mockBuffer = new Uint8Array([1, 2, 3, 4]).buffer;
 
             // Mock crypto.subtle
-            global.crypto = {
-                subtle: {
-                    digest: jest.fn().mockResolvedValue(mockBuffer)
+            Object.defineProperty(global, 'crypto', {
+                configurable: true,
+                value: {
+                    subtle: {
+                        digest: jest.fn().mockResolvedValue(mockBuffer)
+                    }
                 }
-            };
+            });
 
             const result = await SHA256('test');
             expect(crypto.subtle.digest).toHaveBeenCalledWith(
@@ -47,8 +44,10 @@ describe('Crypto utilities', () => {
 
         test('should fall back to js-sha256 when Web Crypto not available', async () => {
             // Mock implementation of SHA256 to force the use of mocked sha256
-            const originalSHA256 = global.crypto;
-            global.crypto = undefined;
+            Object.defineProperty(global, 'crypto', {
+                configurable: true,
+                value: undefined
+            });
 
             const result = await SHA256('test');
 
@@ -56,8 +55,6 @@ describe('Crypto utilities', () => {
             expect(sha256).toHaveBeenCalledWith('test');
             expect(result).toBe('mockedHash');
 
-            // Restore original
-            global.crypto = originalSHA256;
         });
     });
 

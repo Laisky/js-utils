@@ -17,6 +17,8 @@ export default [
     output: [
       { file: pkg.module, format: 'es' },
       { file: pkg.main, format: 'cjs' },
+      // Retain the established artifact path for existing bundlers and direct URLs.
+      { file: 'dist/index.cjs.js', format: 'cjs' },
       {
         file: pkg.browser,
         format: 'umd',
