@@ -43,5 +43,7 @@ jobs:
         run: yarn test --runInBand
       - name: Build ESM, CommonJS and UMD bundles
         run: yarn build
+      - name: Verify packed JavaScript consumers and legacy CJS alias
+        run: node tests/package-entry.cjs
       - name: Verify tracked inputs remain unchanged
-        run: git diff --exit-code -- package.json yarn.lock src tests
+        run: git diff --exit-code -- package.json yarn.lock rollup.config.js src tests
